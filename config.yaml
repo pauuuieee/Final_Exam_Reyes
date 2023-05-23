@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Install Update (Ubuntu)
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+    
+  - name: Update repository index (CentOS)
+    dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+     
+- hosts: exam_server
+  become: true
+  roles:
+    - enterprise
+    - monitor
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Creating Banner Motd in Ubuntu
+    debug:
+      msg: "Ansible Managed node by Reyes"
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Creating Banner Motd in CentOS
+    debug:
+      msg: "Ansible Managed node by Reyes"
+    when: ansible_distribution == "CentOS"
